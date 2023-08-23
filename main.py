@@ -1,27 +1,25 @@
 from PIL import Image
-import os
+from pathlib import Path
 
-path = os.path.expanduser(
-    "~/Dropbox/Marketing/Webflow Images/Product Guide"
-)  # folder for unedited images
-pathOut = os.path.expanduser(
-    "~/Dropbox/Marketing/Webflow Images/Product Guide/Compressed"
-)  # folder for edited images
+# Define the base directory
+base_path = Path.home() / "Dropbox" / "Marketing" / "Webflow Images" / "Product Guide"
+
+# Define the input and output directories using the base directory
+path = base_path
+pathOut = base_path / "Compressed"
 size = (2400, 1600)
 
 # Ensure the output directory exists
-if not os.path.exists(pathOut):
-    os.makedirs(pathOut)
+pathOut.mkdir(parents=True, exist_ok=True)
 
-for filename in os.listdir(path):
-    full_path = os.path.join(path, filename)
-
+for file_path in path.iterdir():
     # Check if it's a file and not '.DS_Store'
-    if os.path.isfile(full_path) and filename != ".DS_Store":
-        img = Image.open(full_path)
+    if file_path.is_file() and file_path.name != ".DS_Store":
+        img = Image.open(file_path)
 
         # Resizing using LANCZOS for highest quality
         edit = img.resize(size, resample=1, reducing_gap=3.0)
 
-        clean_name = os.path.splitext(filename)[0]
-        edit.save(f"{pathOut}/{clean_name}_edited.jpg", quality=100, optimize=True)
+        clean_name = file_path.stem
+        edit.save(pathOut / f"{clean_name}_edited.jpg", quality=100, optimize=True)
+
