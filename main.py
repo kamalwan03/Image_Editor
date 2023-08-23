@@ -21,4 +21,5 @@ for file_path in path.iterdir():
         edit = img.resize(size, resample=1, reducing_gap=3.0)
 
         clean_name = file_path.stem
-        (pathOut / f"{clean_name}_edited.jpg").save(edit, quality=100, optimize=True)
+        edit.save(pathOut / f"{clean_name}_edited.jpg", quality=100, optimize=True)
+
